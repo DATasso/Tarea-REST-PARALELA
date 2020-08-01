@@ -66,7 +66,7 @@ def getCarrera(codigo):
         return("No existe una carrera con ese código")
 
 #Ruta para obtener los datos de una o mas carreras a través de su/s nombre/s
-@app.route('/nombre')
+@app.route('/busqueda')
 @token_required
 def getNombre():
     args = request.args.getlist('nombre')
@@ -84,7 +84,7 @@ def getNombre():
         return('No se recibieron datos en json con key = "nombre"')
 
 #Ruta para ingresar datos del postulante y obtener las 10 mejores carreras con sus respectivos datos
-@app.route('/okey', methods=['POST'])
+@app.route('/mejores', methods=['POST'])
 @token_required
 def pong():
     lista = []
@@ -94,36 +94,39 @@ def pong():
     Matemática = request.json.get('Matemática')
     Ciencias = request.json.get('Ciencias')
     Historia = request.json.get('Historia')
-    if Nem and Ranking and Lenguaje and Matemática and (Ciencias or Historia): 
-        for i in carreras:
-            mayorCienciaHistoria = 0
-            if Ciencias and Historia:
-                if(Ciencias >= Historia):
+    if Nem and Ranking and Lenguaje and Matemática and (Ciencias or Historia):
+        if isinstance(Nem, int) and isinstance(Ranking, int) and isinstance(Lenguaje, int) and isinstance(Matemática, int) and (isinstance(Ciencias, int) or isinstance(Historia, int)):
+            for i in carreras:
+                mayorCienciaHistoria = 0
+                if Ciencias and Historia:
+                    if(Ciencias >= Historia):
+                        mayorCienciaHistoria = Ciencias
+                    else:
+                        mayorCienciaHistoria = Historia
+                elif not Historia:
                     mayorCienciaHistoria = Ciencias
-                else:
+                elif not Ciencias:
                     mayorCienciaHistoria = Historia
-            elif not Historia:
-                mayorCienciaHistoria = Ciencias
-            elif not Ciencias:
-                mayorCienciaHistoria = Historia
-            
-            puntaje = Nem*i['NEM'] + Ranking*i['Ranking'] + Lenguaje*i['Lenguaje'] + Matemática*i['Matemática'] + mayorCienciaHistoria*i['Ciencias']
-            posicion = lugar(puntaje, i['Vacantes'], i['Primero'], i['Último'])
-            datos = {"Código de Carrera": i['Código'], "Nombre de la Carrera": i['Nombre'], "Puntaje de Postulación": puntaje, "Lugar Tentativo": posicion}
-            lista.append(datos)
-        ordenado = sorted(lista, key = lambda i: i['Lugar Tentativo'])
-        top10 = ordenado[:10]
-        return jsonify(top10), 200
+                
+                puntaje = Nem*i['NEM'] + Ranking*i['Ranking'] + Lenguaje*i['Lenguaje'] + Matemática*i['Matemática'] + mayorCienciaHistoria*i['Ciencias']
+                posicion = lugar(puntaje, i['Vacantes'], i['Primero'], i['Último'])
+                datos = {"Código de Carrera": i['Código'], "Nombre de la Carrera": i['Nombre'], "Puntaje de Postulación": puntaje, "Lugar Tentativo": posicion}
+                lista.append(datos)
+            ordenado = sorted(lista, key = lambda i: i['Lugar Tentativo'])
+            top10 = ordenado[:10]
+            return jsonify(top10), 200
+        else:
+            return('Error al recibir datos, verifique que los campos "Nem", "Ranking", "Lenguaje", "Matemática" y "Ciencias" o "Historia" sean NUMEROS ENTEROS')
     else:
         return('Error al recibir datos, verifique que se enviaran los campos "Nem", "Ranking", "Lenguaje", "Matemática" y "Ciencias" o "Historia"')
 
 #Función para obtener posición en la carrera segun el puntaje del postulante, las vacantes y el primero y ultimo puntaje del año anterior de la carrera
 def lugar(puntaje,vacantes,primero,ultimo):
+    pos = 1
     if (puntaje >= primero):
-        return 1
+        return pos
     else:
-        pos = 1
-        distancia = (primero+ultimo) / vacantes
+        distancia = (primero-ultimo)/vacantes
         actual = primero
         while(actual > puntaje):
             pos = pos+1
