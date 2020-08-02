@@ -1,10 +1,9 @@
 # Proyecto REST Computación Paralela y Distribuida
 Proyecto SOAP para la asignatura computación paralela y distribuida en la UTEM, semestre 1 2020; docente: Sebastián Salazar.
  El proyecto consiste en desarrollar un servicio REST que entregue en función de los puntajes obtenidos por el estudiante, las 10 carreras en las que tiene mayores opciones de ingreso desde la que tiene mejor opción hasta la que tiene menor opción.
- #### Autores
-· Daniel Aguilera T.
-
-· Nicolás Andrews S.
+#### Autores
+- Daniel Aguilera Tasso
+- Nicolás Andrews Sandoval
 
 ## Dependencias y compilación
 Se recomienda una versión de python mayor a 3.2, preferiblemente 3.8.2 . Y las librerías `flask` , `flask-cors` y `pyjwt`. Además se hace uso de los módulos `datetime` y `wraps` de `functools`
