@@ -22,20 +22,20 @@ El servicio rest debe usar el archivo `rest.py` desde la terminal.
 
 
 ##  Rutas del servicio:
-**'/login' GET**
+**'/login' GET**<br>
 Utilizar Basic Auth (Usuario y Contraseña) para autenticar y obtener token (JWT)
 
-**'/carreras' GET**
+**'/carreras' GET**<br>
 Retorna un JSON con todas las carreras y sus respectivos datos. Es necesario incluir la cabecera o header "acceso-token" con el token correspondiente.
 
-**'/carreras/<string:codigo>' GET**
+**'/carreras/<string:codigo>' GET**<br>
 Retorna un JSON con los datos de la carrera que corresponde al código ingresado. Funcionamiento mediante Path Param, EJ: `localhost:4000/carreras/21041`. Es necesario incluir la cabecera o header "acceso-token" con el token correspondiente.
 
-**'/busqueda' GET**
+**'/busqueda' GET**<br>
 Retorna un listado de todas las carreras que contengan el nombre ingresado, en formato JSON. Funcionamiento mediante Query Param con un key:`nombre`,
 EJ: `localhost:4000/busqueda?nombre="Ingeniería`. Esta función permite multiples búsquedas, es decir, multiples key `nombre`. Es necesario incluir la cabecera o header "acceso-token" con el token correspondiente.
 
-**'/mejores' POST**
+**'/mejores' POST**<br>
 Retorna un listado de las 10 primeras mejores carreras(ordenadas desde el mejor al peor lugar tentativo), en formato JSON. Funcionamiento mediante Body Request (JSON) que contenga un `Nem`,`Ranking`,`Lenguaje`,`Matemática`y (`Ciencias` o `Historia)`. Es necesario incluir la cabecera o header "acceso-token" con el token correspondiente.
 
 Ej Body (JSON):
